@@ -4,15 +4,16 @@
 This repository contains the deployment and automation framework used in my BSc thesis:
 
 **“System-Level Analysis of Hardware Offloading in High-Performance Open RAN Deployments”**
+
 It provides a reproducible, Kubernetes-based environment for deploying and evaluating multi-Distributed Unit (DU) Open RAN scenarios using the srsRAN Project, supporting both software-only and hardware-offloaded (Intel ACC100) configurations.
 The framework enables systematic experimentation across a wide range of RAN and system parameters including DU scaling, concurrency, PRBs, MCS, SMT configurations, and real UE traffic.
 
 ## Features
--Kubernetes-based multi-DU deployment
--Helm charts for scalable and configurable experiments
--Automated experiment automation using YAML configurations
--Helm templates for configurable parameters such as srsRAN configuration file, PRBs, MCS, decoder iterations and Upper PHY concurrency
--Automated measurement scripts
+- Kubernetes-based multi-DU deployment
+- Helm charts for scalable and configurable experiments
+- Automated experiment automation using YAML configurations
+- Helm templates for configurable parameters such as srsRAN configuration file, PRBs, MCS, decoder iterations and Upper PHY concurrency
+- Automated measurement scripts
 
 ## Repository Structure
 - concurrencychart/       # Helm chart for concurrency experiments
