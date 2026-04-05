@@ -1,0 +1,179 @@
+{{- $cpu_list_yaml := $.Files.Get "cpu.yaml" | fromYaml }}
+{{- $n := int .Values.jobs }}
+{{- $coresPer := (div $.Values.physicalCores $.Values.jobs) }}
+{{- if lt $coresPer 1 }}
+  {{- $coresPer = 1 }}
+{{- else }}
+  {{- $coresPer = floor $coresPer }}
+{{- end }}
+{{- $pagesPer := int (floor (div .Values.totalPages .Values.jobs)) }}
+{{- $memPer := int (floor (div .Values.freeMem .Values.jobs)) }}
+{{- if gt $memPer 8}}
+  {{- $memPer = 8}}
+{{- end }}
+{{- if gt $pagesPer 8}}
+  {{- $pagesPer = 8}}
+{{- end }}
+{{- range $jobs, $_ := until $n }}
+
+{{- $start := mod (mul $jobs $coresPer) $.Values.physicalCores }}
+{{- $end := add (int $start) $coresPer }}
+{{- $range := list }}
+{{- range $i := untilStep (int $start) (int $end) 1 }}
+  {{- $core := (index $cpu_list_yaml.coreList (int $i)).core }}
+  {{- $range = append $range $core }}
+{{- end }}
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-{{ $jobs }}
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        {{- if eq $.Values.coreDis "shared" }}
+        taskset -c 4-11,32-39 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf
+        {{- else }}
+        taskset -c {{ join "," $range }} chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf
+        {{- end  }}
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "{{ $memPer }}Gi"
+        hugepages-1Gi: "{{ $pagesPer }}Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "{{ $memPer }}Gi"
+        hugepages-1Gi: "{{ $pagesPer }}Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      # optional (only if you need kernel modules visibility inside container)
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-{{ $jobs }}
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+
+---
+{{- end }}
+
+#Profiler Pod (Executes System Profiling)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: profiler
+spec:
+  hostPID: true
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: profiler
+    image: fatimkone04/profiling:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        while true; do
+          PIDS=$(pidof gnb)
+          if [ -n "$PIDS" ]; then
+            for p in $PIDS; do
+              if grep -q ".so" /proc/$p/maps 2>/dev/null; then
+                READY=1
+              fi
+            done
+            [ "$READY" = "1" ] && break
+          fi
+          sleep 2
+        done
+        PIDS=$(pidof gnb | tr ' ' ',')
+        perf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-store,L1-dcache-load-misses -I 1000 --interval-count 180 -p $PIDS 2>&1| awk 'NR>1 { print $2,$3,$5 }' | tr ' ' ',' >> cache.log &
+        perf stat -e power/energy-pkg/ -I 1000 --interval-count 180 2>&1 | grep -vE 'time' | awk 'NR>1 { print $2 }' >> energy.csv &
+        vmstat 1 180 -S K | grep -vE 'free|io' | awk 'NR>2 { print $4 }' >> mem.csv &
+        pidstat -C gnb -w -u -r -h 1 180 | grep -v '^#' | awk 'NR>1 && !/^[[:space:]]*$/' >> cpu.log &
+        {{- if eq $.Values.mode "hardware" }}
+        python3 profile.py 180 99 --offload > onCPU.log &
+        {{- else }}
+        python3 profile.py 180 99 > onCPU.log &
+        {{- end }}
+        python3 offcputime.py 180 > offCPU.log &
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "2Gi"       
+        ephemeral-storage: "2Gi"
+      limits:
+        memory: "2Gi"      
+        ephemeral-storage: "2Gi"
+    volumeMounts:
+    - name: libmodules
+      mountPath: /lib/modules
+      readOnly: true
+    - name: debugfs
+      mountPath: /sys/kernel/debug
+    - name: tracefs
+      mountPath: /sys/kernel/tracing
+  volumes:
+  - name: libmodules
+    hostPath:
+      path: /lib/modules
+  - name: debugfs
+    hostPath:
+      path: /sys/kernel/debug
+  - name: tracefs
+    hostPath:
+      path: /sys/kernel/tracing

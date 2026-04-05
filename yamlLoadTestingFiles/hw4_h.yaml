@@ -1,0 +1,952 @@
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-0
+data:
+  gnb.conf: |
+
+    cu_up:
+      warn_on_drop: False
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.20
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+                    sd: 1
+
+    buffer_pool:
+      nof_segments: 1048576
+
+    ru_ofh:
+      t1a_max_cp_dl: 500
+      t1a_min_cp_dl: 450
+      t1a_max_cp_ul: 350
+      t1a_min_cp_ul: 290
+      t1a_max_up: 360
+      t1a_min_up: 300
+      ta4_max: 400
+      ta4_min: 0
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 10.0
+      cells:
+        - network_interface: 0000:86:01.2
+          ru_mac_addr: 70:b3:d5:e1:5f:b9
+          du_mac_addr: 00:11:22:33:66:88
+          vlan_tag_cp: 7
+          vlan_tag_up: 7
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+
+    cells:
+      - pci: 1
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        ssb_block_power_dbm: -16
+      pdsch:
+        mcs_table: qam256
+        max_ue_mcs: 27
+        olla_target_bler: 0.1
+        dmrs_additional_position: 3
+      pusch:
+        max_ue_mcs: 27
+        mcs_table: qam256
+        olla_target_bler: 0.1
+        dmrs_additional_position: 2
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: true
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+        nof_prb_dl: 275
+        nof_prb_ul: 275
+
+    hal:
+      bbdev_hwacc:
+        hwacc_type: acc100
+        id: 0
+        pdsch_enc:
+          nof_hwacc: 8
+          cb_mode: false
+          dedicated_queue: false
+        pusch_dec:
+          nof_hwacc: 4
+          force_local_harq: false
+          dedicated_queue: false
+          harq_context_size: 4096
+      eal_args: "-a 0000:11:00.0 --lcores=(0-3)@(4,5,6,7,8) -a 0000:86:01.2"
+
+    expert_phy:
+      max_request_headroom_slots: 3
+      max_proc_delay: 4
+      pusch_dec_max_iterations: 2
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-1
+data:
+  gnb.conf: |
+
+    cu_up:
+      warn_on_drop: False
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.21
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+                    sd: 1
+
+    buffer_pool:
+      nof_segments: 1048576
+
+    ru_ofh:
+      t1a_max_cp_dl: 500
+      t1a_min_cp_dl: 450
+      t1a_max_cp_ul: 350
+      t1a_min_cp_ul: 290
+      t1a_max_up: 360
+      t1a_min_up: 300
+      ta4_max: 400
+      ta4_min: 0
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 10.0
+      cells:
+        - network_interface: 0000:86:09.1
+          ru_mac_addr: 70:b3:d5:e1:5f:da
+          du_mac_addr: 00:11:22:33:99:88
+          vlan_tag_cp: 15
+          vlan_tag_up: 15
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+
+    cells:
+      - pci: 1
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        ssb_block_power_dbm: -16
+      pdsch:
+        mcs_table: qam256
+        max_ue_mcs: 27
+        olla_target_bler: 0.1
+        dmrs_additional_position: 3
+      pusch:
+        max_ue_mcs: 27
+        mcs_table: qam256
+        olla_target_bler: 0.1
+        dmrs_additional_position: 2
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: true
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+        nof_prb_dl: 275
+        nof_prb_ul: 275
+
+    hal:
+      bbdev_hwacc:
+        hwacc_type: acc100
+        id: 0
+        pdsch_enc:
+          nof_hwacc: 8
+          cb_mode: false
+          dedicated_queue: false
+        pusch_dec:
+          nof_hwacc: 4
+          force_local_harq: false
+          dedicated_queue: false
+          harq_context_size: 4096
+      eal_args: "-a 0000:11:00.1 --lcores=(0-3)@(9,10,11,12,13) -a 0000:86:09.1"
+
+    expert_phy:
+      max_request_headroom_slots: 3
+      max_proc_delay: 4
+      pusch_dec_max_iterations: 2
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-2
+data:
+  gnb.conf: |
+
+    cu_up:
+      warn_on_drop: False
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.22
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+                    sd: 1
+
+    buffer_pool:
+      nof_segments: 1048576
+
+    ru_ofh:
+      t1a_max_cp_dl: 500
+      t1a_min_cp_dl: 450
+      t1a_max_cp_ul: 350
+      t1a_min_cp_ul: 290
+      t1a_max_up: 360
+      t1a_min_up: 300
+      ta4_max: 400
+      ta4_min: 0
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 10.0
+      cells:
+        - network_interface: 0000:86:11.1
+          ru_mac_addr: 70:b3:d5:e1:5f:ad
+          du_mac_addr: 00:11:22:33:dd:88
+          vlan_tag_cp: 25
+          vlan_tag_up: 25
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+
+    cells:
+      - pci: 1
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        ssb_block_power_dbm: -16
+      pdsch:
+        mcs_table: qam256
+        max_ue_mcs: 27
+        olla_target_bler: 0.1
+        dmrs_additional_position: 3
+      pusch:
+        max_ue_mcs: 27
+        mcs_table: qam256
+        olla_target_bler: 0.1
+        dmrs_additional_position: 2
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: true
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+        nof_prb_dl: 275
+        nof_prb_ul: 275
+
+    hal:
+      bbdev_hwacc:
+        hwacc_type: acc100
+        id: 0
+        pdsch_enc:
+          nof_hwacc: 8
+          cb_mode: false
+          dedicated_queue: false
+        pusch_dec:
+          nof_hwacc: 4
+          force_local_harq: false
+          dedicated_queue: false
+          harq_context_size: 4096
+      eal_args: "-a 0000:11:00.2 --lcores=(0-3)@(14,15,16,17,18) -a 0000:86:11.1"
+
+    expert_phy:
+      max_request_headroom_slots: 3
+      max_proc_delay: 4
+      pusch_dec_max_iterations: 2
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-3
+data:
+  gnb.conf: |
+
+    cu_up:
+      warn_on_drop: False
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.23
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+                    sd: 1
+
+    buffer_pool:
+      nof_segments: 1048576
+
+    ru_ofh:
+      t1a_max_cp_dl: 500
+      t1a_min_cp_dl: 450
+      t1a_max_cp_ul: 350
+      t1a_min_cp_ul: 290
+      t1a_max_up: 360
+      t1a_min_up: 300
+      ta4_max: 400
+      ta4_min: 0
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 10.0
+      cells:
+        - network_interface: 0000:86:19.1
+          ru_mac_addr: 70:b3:d5:e1:5f:d4
+          du_mac_addr: 00:11:22:33:bb:88
+          vlan_tag_cp: 26
+          vlan_tag_up: 26
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+
+    cells:
+      - pci: 1
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        ssb_block_power_dbm: -16
+      pdsch:
+        mcs_table: qam256
+        max_ue_mcs: 27
+        olla_target_bler: 0.1
+        dmrs_additional_position: 3
+      pusch:
+        max_ue_mcs: 27
+        mcs_table: qam256
+        olla_target_bler: 0.1
+        dmrs_additional_position: 2
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: true
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+        nof_prb_dl: 275
+        nof_prb_ul: 275
+
+    hal:
+      bbdev_hwacc:
+        hwacc_type: acc100
+        id: 0
+        pdsch_enc:
+          nof_hwacc: 8
+          cb_mode: false
+          dedicated_queue: false
+        pusch_dec:
+          nof_hwacc: 4
+          force_local_harq: false
+          dedicated_queue: false
+          harq_context_size: 4096
+      eal_args: "-a 0000:11:00.3 --lcores=(0-3)@(19,20,21,22,23) -a 0000:86:19.1"
+
+    expert_phy:
+      max_request_headroom_slots: 3
+      max_proc_delay: 4
+      pusch_dec_max_iterations: 2
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-0
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 4,5,6,7,8 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      # optional (only if you need kernel modules visibility inside container)
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-0
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-1
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 9,10,11,12,13 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      # optional (only if you need kernel modules visibility inside container)
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-1
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-2
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 14,15,16,17,18 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      # optional (only if you need kernel modules visibility inside container)
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-2
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-3
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 19,20,21,22,23 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      # optional (only if you need kernel modules visibility inside container)
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-3
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+#Profiler Pod (Executes System Profiling)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: profiler
+spec:
+  hostPID: true
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: profiler
+    image: fatimkone04/profiling:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        sleep 30
+        while true; do
+          PIDS=$(pidof gnb)
+          if [ -n "$PIDS" ]; then
+            for p in $PIDS; do
+              if grep -q ".so" /proc/$p/maps 2>/dev/null; then
+                READY=1
+              fi
+            done
+            [ "$READY" = "1" ] && break
+          fi
+          sleep 2
+        done
+        PIDS=$(pidof gnb | tr ' ' ',')
+        gcc bbdev_stats.c -o bbdev_stats $(pkg-config --cflags --libs libdpdk)
+        ./bbdev_stats --proc-type=secondary &
+        perf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-store,L1-dcache-load-misses -I 1000 --interval-count 180 -p $PIDS 2>&1| awk 'NR>1 { print $2,$3,$5 }' | tr ' ' ',' >> cache.log &
+        perf stat -e power/energy-pkg/ -I 1000 --interval-count 180 2>&1 | grep -vE 'time' | awk 'NR>1 { print $2 }' >> energy.csv &
+        vmstat 1 180 -S K | grep -vE 'free|io' | awk 'NR>2 { print $4 }' >> mem.csv &
+        pidstat -C gnb -w -u -r -h 1 180 | grep -v '^#' | awk 'NR>1 && !/^[[:space:]]*$/' >> cpu.log &
+        python3 profile.py 180 99 --offload > onCPU.log &
+        python3 offcputime.py 180 > offCPU.log &
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "2Gi"       
+        ephemeral-storage: "2Gi"
+      limits:
+        memory: "2Gi"      
+        ephemeral-storage: "2Gi"
+    volumeMounts:
+    - name: libmodules
+      mountPath: /lib/modules
+      readOnly: true
+    - name: debugfs
+      mountPath: /sys/kernel/debug
+    - name: tracefs
+      mountPath: /sys/kernel/tracing
+  volumes:
+  - name: libmodules
+    hostPath:
+      path: /lib/modules
+  - name: debugfs
+    hostPath:
+      path: /sys/kernel/debug
+  - name: tracefs
+    hostPath:
+      path: /sys/kernel/tracing

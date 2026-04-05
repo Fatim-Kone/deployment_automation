@@ -1,0 +1,1166 @@
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-0
+data:
+  gnb.conf: |
+    cu_up:
+      ngu:
+        socket:
+          - bind_addr: 10.0.0.20
+            ext_addr: 10.0.0.20
+      test_mode:
+        enable: false
+      test_mode_userplane:
+        enable: true
+        pdu_session_id: 1
+        drb_id: 1
+        five_qi: 1
+        qfi: 1
+        pcell_index: 0
+        f1u_ul_addr: 127.0.10.1
+        f1u_ul_teid: 256
+        f1u_dl_addr: 127.0.10.2
+        f1u_dl_teid: 257
+        n3_peer_addr: 10.0.0.20
+        n3_peer_teid: 512
+        n3_dl_teid: 1
+        dl_generator_enable: false
+        ul_generator_enable: true
+        mac_bsr_hook_enable: true
+        mac_bsr_hook_bind_addr: 127.0.0.1
+        mac_bsr_hook_bind_port: 39001
+        mac_bsr_default: 0
+        mac_bsr_stale_timeout_ms: 500
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.20
+        sctp_nodelay: true
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+
+    ru_ofh:
+      t1a_max_cp_dl: 470
+      t1a_min_cp_dl: 419
+      t1a_max_cp_ul: 430
+      t1a_min_cp_ul: 286
+      t1a_max_up: 390
+      t1a_min_up: 80
+      ta4_max: 500
+      ta4_min: 25
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 12.8
+      cells:
+        - network_interface: 0000:86:01.2
+          ru_mac_addr: 70:b3:d5:e1:5f:b9
+          du_mac_addr: 00:11:22:33:66:88
+          vlan_tag_cp: 7
+          vlan_tag_up: 7
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+          pcap_enable: false    
+          pcap_filename: /tmp/ofh.pcap
+
+    expert_execution:
+      queues:
+        cu_up_dl_ue_executor_queue_size: 18192
+        cu_up_ul_ue_executor_queue_size: 18192
+        cu_up_ctrl_ue_executor_queue_size: 18192
+        cu_up_strand_batch_size: 1212
+        du_ue_data_executor_queue_size: 16192
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      pci: 25
+      pcg_p_nr_fr1: +23
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        pss_to_sss_epre_db: 0
+        ssb_block_power_dbm: -16
+        ssb_period: 20 
+      ul_common:
+        p_max: 23 
+      pdsch:
+        dmrs_additional_position: 3
+        mcs_table: qam256
+        olla_target_bler: 0.20    
+        olla_cqi_inc_step: 0.01
+        olla_max_cqi_offset: 6
+        max_nof_harq_retxs: 3
+        max_rank: 4
+      pusch:
+        max_ue_mcs: 20
+      srs:
+        srs_period_ms: 640
+        srs_max_nof_sym_per_slot: 6             # Optional UINT (2). Sets the number of symbols for UL slot that are reserved for the SRS cell resources. Supprted: [1 - 6].
+        srs_nof_sym_per_resource: 4             # Optional UINT (2). Sets the number of symbols per SRS resource. Supported: {1,2,4}.
+        srs_tx_comb: 2                          # Optional UINT (4). Sets the SRS TX comb size. Supported: {2, 4}.
+        srs_cyclic_shift_reuse: 1               # Optional UINT (1). Sets the SRS cyclic shift reuse factor. It needs to be compatible with the TX comb and number of UL antenna ports. Supported: {1,2,3,4,6}.
+        srs_sequence_id_reuse: 1
+      csi:
+        csi_rs_enabled: true                    # Optional BOOLEAN (true). Enables CSI-RS resources and CSI reporting. Supported: [false, true].
+        csi_rs_period: 40
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: false
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+
+    test_mode_userplane:
+      enable: true
+      pdu_session_id: 1
+      drb_id: 1
+      five_qi: 1          # UM (required)
+      qfi: 1
+      pcell_index: 0
+      f1u_ul_addr: 127.0.10.1
+      f1u_ul_teid: 256
+      f1u_dl_addr: 127.0.10.2
+      f1u_dl_teid: 257
+      n3_peer_addr: 10.0.0.20
+      n3_peer_teid: 512
+      n3_dl_teid: 1
+      dl_generator_enable: false
+      ul_generator_enable: true
+      mac_bsr_hook_enable: true
+      mac_bsr_hook_bind_addr: 127.0.0.1
+      mac_bsr_hook_bind_port: 39001
+      mac_bsr_default: 0
+      mac_bsr_stale_timeout_ms: 500
+      ul_sdu_size: 1000
+
+    hal:
+      eal_args: "--file-prefix gnb --lcores=(0-3)@(4-23) -a 0000:86:01.2"
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+      fapi_level: info
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        enable_rlc: true
+        enable_pdcp: true
+        enable_rrc: true
+        enable_mac: true 
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-1
+data:
+  gnb.conf: |
+    cu_up:
+      ngu:
+        socket:
+          - bind_addr: 10.0.0.21
+            ext_addr: 10.0.0.21
+      test_mode:
+        enable: false
+      test_mode_userplane:
+        enable: true
+        pdu_session_id: 1
+        drb_id: 1
+        five_qi: 1
+        qfi: 1
+        pcell_index: 0
+        f1u_ul_addr: 127.0.10.1
+        f1u_ul_teid: 256
+        f1u_dl_addr: 127.0.10.2
+        f1u_dl_teid: 257
+        n3_peer_addr: 10.0.0.21
+        n3_peer_teid: 512
+        n3_dl_teid: 1
+        dl_generator_enable: false
+        ul_generator_enable: true
+        mac_bsr_hook_enable: true
+        mac_bsr_hook_bind_addr: 127.0.0.1
+        mac_bsr_hook_bind_port: 39001
+        mac_bsr_default: 0
+        mac_bsr_stale_timeout_ms: 500
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.21
+        sctp_nodelay: true
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+
+    ru_ofh:
+      t1a_max_cp_dl: 470
+      t1a_min_cp_dl: 419
+      t1a_max_cp_ul: 430
+      t1a_min_cp_ul: 286
+      t1a_max_up: 390
+      t1a_min_up: 80
+      ta4_max: 500
+      ta4_min: 25
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 12.8
+      cells:
+        - network_interface: 0000:86:09.1
+          ru_mac_addr: 70:b3:d5:e1:5f:da
+          du_mac_addr: 00:11:22:33:99:88
+          vlan_tag_cp: 15
+          vlan_tag_up: 15
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+          pcap_enable: false    
+          pcap_filename: /tmp/ofh.pcap
+
+    expert_execution:
+      queues:
+        cu_up_dl_ue_executor_queue_size: 18192
+        cu_up_ul_ue_executor_queue_size: 18192
+        cu_up_ctrl_ue_executor_queue_size: 18192
+        cu_up_strand_batch_size: 1212
+        du_ue_data_executor_queue_size: 16192
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      pci: 25
+      pcg_p_nr_fr1: +23
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        pss_to_sss_epre_db: 0
+        ssb_block_power_dbm: -16
+        ssb_period: 20 
+      ul_common:
+        p_max: 23 
+      pdsch:
+        dmrs_additional_position: 3
+        mcs_table: qam256
+        olla_target_bler: 0.20    
+        olla_cqi_inc_step: 0.01
+        olla_max_cqi_offset: 6
+        max_nof_harq_retxs: 3
+        max_rank: 4
+      pusch:
+        max_ue_mcs: 20
+      srs:
+        srs_period_ms: 640
+        srs_max_nof_sym_per_slot: 6             # Optional UINT (2). Sets the number of symbols for UL slot that are reserved for the SRS cell resources. Supprted: [1 - 6].
+        srs_nof_sym_per_resource: 4             # Optional UINT (2). Sets the number of symbols per SRS resource. Supported: {1,2,4}.
+        srs_tx_comb: 2                          # Optional UINT (4). Sets the SRS TX comb size. Supported: {2, 4}.
+        srs_cyclic_shift_reuse: 1               # Optional UINT (1). Sets the SRS cyclic shift reuse factor. It needs to be compatible with the TX comb and number of UL antenna ports. Supported: {1,2,3,4,6}.
+        srs_sequence_id_reuse: 1
+      csi:
+        csi_rs_enabled: true                    # Optional BOOLEAN (true). Enables CSI-RS resources and CSI reporting. Supported: [false, true].
+        csi_rs_period: 40
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: false
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+
+    test_mode_userplane:
+      enable: true
+      pdu_session_id: 1
+      drb_id: 1
+      five_qi: 1          # UM (required)
+      qfi: 1
+      pcell_index: 0
+      f1u_ul_addr: 127.0.10.1
+      f1u_ul_teid: 256
+      f1u_dl_addr: 127.0.10.2
+      f1u_dl_teid: 257
+      n3_peer_addr: 10.0.0.21
+      n3_peer_teid: 512
+      n3_dl_teid: 1
+      dl_generator_enable: false
+      ul_generator_enable: true
+      mac_bsr_hook_enable: true
+      mac_bsr_hook_bind_addr: 127.0.0.1
+      mac_bsr_hook_bind_port: 39001
+      mac_bsr_default: 0
+      mac_bsr_stale_timeout_ms: 500
+      ul_sdu_size: 1000
+
+    hal:
+      eal_args: "--file-prefix gnb --lcores=(0-3)@(4-23) -a 0000:86:09.1"
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+      fapi_level: info
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        enable_rlc: true
+        enable_pdcp: true
+        enable_rrc: true
+        enable_mac: true 
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-2
+data:
+  gnb.conf: |
+    cu_up:
+      ngu:
+        socket:
+          - bind_addr: 10.0.0.22
+            ext_addr: 10.0.0.22
+      test_mode:
+        enable: false
+      test_mode_userplane:
+        enable: true
+        pdu_session_id: 1
+        drb_id: 1
+        five_qi: 1
+        qfi: 1
+        pcell_index: 0
+        f1u_ul_addr: 127.0.10.1
+        f1u_ul_teid: 256
+        f1u_dl_addr: 127.0.10.2
+        f1u_dl_teid: 257
+        n3_peer_addr: 10.0.0.22
+        n3_peer_teid: 512
+        n3_dl_teid: 1
+        dl_generator_enable: false
+        ul_generator_enable: true
+        mac_bsr_hook_enable: true
+        mac_bsr_hook_bind_addr: 127.0.0.1
+        mac_bsr_hook_bind_port: 39001
+        mac_bsr_default: 0
+        mac_bsr_stale_timeout_ms: 500
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.22
+        sctp_nodelay: true
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+
+    ru_ofh:
+      t1a_max_cp_dl: 470
+      t1a_min_cp_dl: 419
+      t1a_max_cp_ul: 430
+      t1a_min_cp_ul: 286
+      t1a_max_up: 390
+      t1a_min_up: 80
+      ta4_max: 500
+      ta4_min: 25
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 12.8
+      cells:
+        - network_interface: 0000:86:11.1
+          ru_mac_addr: 70:b3:d5:e1:5f:ad
+          du_mac_addr: 00:11:22:33:dd:88
+          vlan_tag_cp: 25
+          vlan_tag_up: 25
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+          pcap_enable: false    
+          pcap_filename: /tmp/ofh.pcap
+
+    expert_execution:
+      queues:
+        cu_up_dl_ue_executor_queue_size: 18192
+        cu_up_ul_ue_executor_queue_size: 18192
+        cu_up_ctrl_ue_executor_queue_size: 18192
+        cu_up_strand_batch_size: 1212
+        du_ue_data_executor_queue_size: 16192
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      pci: 25
+      pcg_p_nr_fr1: +23
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        pss_to_sss_epre_db: 0
+        ssb_block_power_dbm: -16
+        ssb_period: 20 
+      ul_common:
+        p_max: 23 
+      pdsch:
+        dmrs_additional_position: 3
+        mcs_table: qam256
+        olla_target_bler: 0.20    
+        olla_cqi_inc_step: 0.01
+        olla_max_cqi_offset: 6
+        max_nof_harq_retxs: 3
+        max_rank: 4
+      pusch:
+        max_ue_mcs: 20
+      srs:
+        srs_period_ms: 640
+        srs_max_nof_sym_per_slot: 6             # Optional UINT (2). Sets the number of symbols for UL slot that are reserved for the SRS cell resources. Supprted: [1 - 6].
+        srs_nof_sym_per_resource: 4             # Optional UINT (2). Sets the number of symbols per SRS resource. Supported: {1,2,4}.
+        srs_tx_comb: 2                          # Optional UINT (4). Sets the SRS TX comb size. Supported: {2, 4}.
+        srs_cyclic_shift_reuse: 1               # Optional UINT (1). Sets the SRS cyclic shift reuse factor. It needs to be compatible with the TX comb and number of UL antenna ports. Supported: {1,2,3,4,6}.
+        srs_sequence_id_reuse: 1
+      csi:
+        csi_rs_enabled: true                    # Optional BOOLEAN (true). Enables CSI-RS resources and CSI reporting. Supported: [false, true].
+        csi_rs_period: 40
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: false
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+
+    test_mode_userplane:
+      enable: true
+      pdu_session_id: 1
+      drb_id: 1
+      five_qi: 1          # UM (required)
+      qfi: 1
+      pcell_index: 0
+      f1u_ul_addr: 127.0.10.1
+      f1u_ul_teid: 256
+      f1u_dl_addr: 127.0.10.2
+      f1u_dl_teid: 257
+      n3_peer_addr: 10.0.0.22
+      n3_peer_teid: 512
+      n3_dl_teid: 1
+      dl_generator_enable: false
+      ul_generator_enable: true
+      mac_bsr_hook_enable: true
+      mac_bsr_hook_bind_addr: 127.0.0.1
+      mac_bsr_hook_bind_port: 39001
+      mac_bsr_default: 0
+      mac_bsr_stale_timeout_ms: 500
+      ul_sdu_size: 1000
+
+    hal:
+      eal_args: "--file-prefix gnb --lcores=(0-3)@(4-23) -a 0000:86:11.1"
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+      fapi_level: info
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        enable_rlc: true
+        enable_pdcp: true
+        enable_rrc: true
+        enable_mac: true 
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/gnb_config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-3
+data:
+  gnb.conf: |
+    cu_up:
+      ngu:
+        socket:
+          - bind_addr: 10.0.0.23
+            ext_addr: 10.0.0.23
+      test_mode:
+        enable: false
+      test_mode_userplane:
+        enable: true
+        pdu_session_id: 1
+        drb_id: 1
+        five_qi: 1
+        qfi: 1
+        pcell_index: 0
+        f1u_ul_addr: 127.0.10.1
+        f1u_ul_teid: 256
+        f1u_dl_addr: 127.0.10.2
+        f1u_dl_teid: 257
+        n3_peer_addr: 10.0.0.23
+        n3_peer_teid: 512
+        n3_dl_teid: 1
+        dl_generator_enable: false
+        ul_generator_enable: true
+        mac_bsr_hook_enable: true
+        mac_bsr_hook_bind_addr: 127.0.0.1
+        mac_bsr_hook_bind_port: 39001
+        mac_bsr_default: 0
+        mac_bsr_stale_timeout_ms: 500
+
+    cu_cp:
+      amf:
+        addr: 172.30.129.35
+        bind_addr: 10.0.0.23
+        sctp_nodelay: true
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+
+    ru_ofh:
+      t1a_max_cp_dl: 470
+      t1a_min_cp_dl: 419
+      t1a_max_cp_ul: 430
+      t1a_min_cp_ul: 286
+      t1a_max_up: 390
+      t1a_min_up: 80
+      ta4_max: 500
+      ta4_min: 25
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 12.8
+      cells:
+        - network_interface: 0000:86:19.1
+          ru_mac_addr: 70:b3:d5:e1:5f:d4
+          du_mac_addr: 00:11:22:33:bb:88
+          vlan_tag_cp: 26
+          vlan_tag_up: 26
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+          pcap_enable: false    
+          pcap_filename: /tmp/ofh.pcap
+
+    expert_execution:
+      queues:
+        cu_up_dl_ue_executor_queue_size: 18192
+        cu_up_ul_ue_executor_queue_size: 18192
+        cu_up_ctrl_ue_executor_queue_size: 18192
+        cu_up_strand_batch_size: 1212
+        du_ue_data_executor_queue_size: 16192
+    cell_cfg:
+      dl_arfcn: 660000
+      band: 77
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      pci: 25
+      pcg_p_nr_fr1: +23
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        pss_to_sss_epre_db: 0
+        ssb_block_power_dbm: -16
+        ssb_period: 20 
+      ul_common:
+        p_max: 23 
+      pdsch:
+        dmrs_additional_position: 3
+        mcs_table: qam256
+        olla_target_bler: 0.20    
+        olla_cqi_inc_step: 0.01
+        olla_max_cqi_offset: 6
+        max_nof_harq_retxs: 3
+        max_rank: 4
+      pusch:
+        max_ue_mcs: 20
+      srs:
+        srs_period_ms: 640
+        srs_max_nof_sym_per_slot: 6             # Optional UINT (2). Sets the number of symbols for UL slot that are reserved for the SRS cell resources. Supprted: [1 - 6].
+        srs_nof_sym_per_resource: 4             # Optional UINT (2). Sets the number of symbols per SRS resource. Supported: {1,2,4}.
+        srs_tx_comb: 2                          # Optional UINT (4). Sets the SRS TX comb size. Supported: {2, 4}.
+        srs_cyclic_shift_reuse: 1               # Optional UINT (1). Sets the SRS cyclic shift reuse factor. It needs to be compatible with the TX comb and number of UL antenna ports. Supported: {1,2,3,4,6}.
+        srs_sequence_id_reuse: 1
+      csi:
+        csi_rs_enabled: true                    # Optional BOOLEAN (true). Enables CSI-RS resources and CSI reporting. Supported: [false, true].
+        csi_rs_period: 40
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: false
+        pusch_active: true
+        ri: 4
+        cqi: 15
+        nof_ues: 1
+
+    test_mode_userplane:
+      enable: true
+      pdu_session_id: 1
+      drb_id: 1
+      five_qi: 1          # UM (required)
+      qfi: 1
+      pcell_index: 0
+      f1u_ul_addr: 127.0.10.1
+      f1u_ul_teid: 256
+      f1u_dl_addr: 127.0.10.2
+      f1u_dl_teid: 257
+      n3_peer_addr: 10.0.0.23
+      n3_peer_teid: 512
+      n3_dl_teid: 1
+      dl_generator_enable: false
+      ul_generator_enable: true
+      mac_bsr_hook_enable: true
+      mac_bsr_hook_bind_addr: 127.0.0.1
+      mac_bsr_hook_bind_port: 39001
+      mac_bsr_default: 0
+      mac_bsr_stale_timeout_ms: 500
+      ul_sdu_size: 1000
+
+    hal:
+      eal_args: "--file-prefix gnb --lcores=(0-3)@(4-23) -a 0000:86:19.1"
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+      fapi_level: info
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        enable_rlc: true
+        enable_pdcp: true
+        enable_rrc: true
+        enable_mac: true 
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-0
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:e2e
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 4,5,6,7,8 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf &
+        sleep 20
+        taskset -c 24-26 chrt -f 99 python3 scripts/test_mode_userplane_traffic.py --config /config/gnb.conf --mode dl --dst-ip 10.0.0.20 --tx-bind-ip 10.0.0.20 --dl-tx-teid 1 --dl-qfi 1 --dl-payload-size 5000 --dl-pps 6550 --dl-streams 4
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-0
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-1
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:e2e
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 9,10,11,12,13 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf &
+        sleep 20
+        taskset -c 24-26 chrt -f 99 python3 scripts/test_mode_userplane_traffic.py --config /config/gnb.conf --mode dl --dst-ip 10.0.0.21 --tx-bind-ip 10.0.0.21 --dl-tx-teid 1 --dl-qfi 1 --dl-payload-size 5000 --dl-pps 6550 --dl-streams 4
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-1
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-2
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:e2e
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 14,15,16,17,18 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf &
+        sleep 20
+        taskset -c 24-26 chrt -f 99 python3 scripts/test_mode_userplane_traffic.py --config /config/gnb.conf --mode dl --dst-ip 10.0.0.22 --tx-bind-ip 10.0.0.22 --dl-tx-teid 1 --dl-qfi 1 --dl-payload-size 5000 --dl-pps 6550 --dl-streams 4
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-2
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: srsran-gnb-3
+spec:
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: srsran-gnb
+    image: fatimkone04/srsran:e2e
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        taskset -c 19,20,21,22,23 chrt -f 99 ./build/apps/gnb/gnb -c /config/gnb.conf &
+        sleep 20
+        taskset -c 24-26 chrt -f 99 python3 scripts/test_mode_userplane_traffic.py --config /config/gnb.conf --mode dl --dst-ip 10.0.0.23 --tx-bind-ip 10.0.0.23 --dl-tx-teid 1 --dl-qfi 1 --dl-payload-size 5000 --dl-pps 6550 --dl-streams 4
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+      limits:
+        memory: "8Gi"
+        hugepages-1Gi: "8Gi"
+        ephemeral-storage: "10Gi"
+    volumeMounts:
+      - name: hugepage
+        mountPath: /dev/hugepages
+      - name: vfio
+        mountPath: /dev/vfio
+      - name: sysfs
+        mountPath: /sys
+        readOnly: false
+      - name: firmware
+        mountPath: /lib/firmware
+        readOnly: true
+      - name: modules
+        mountPath: /lib/modules
+        readOnly: true
+      - name: ran-config
+        mountPath: /config
+  volumes:
+  - name: hugepage
+    emptyDir:
+      medium: "HugePages"
+  - name: vfio
+    hostPath:
+      path: /dev/vfio
+      type: Directory
+  - name: sysfs
+    hostPath:
+      path: /sys
+      type: Directory
+  - name: firmware
+    hostPath:
+      path: /lib/firmware
+      type: Directory
+  - name: modules
+    hostPath:
+      path: /lib/modules
+      type: Directory
+  - name: ran-config
+    configMap:
+      name: srsran-gnb-config-3
+      items:
+      - key: gnb.conf
+        path: gnb.conf
+---
+# Source: mychart/templates/pod.yaml
+#Profiler Pod (Executes System Profiling)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: profiler
+spec:
+  hostPID: true
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: profiler
+    image: fatimkone04/profiling:e2e
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        sleep 30
+        while true; do
+          PIDS=$(pidof gnb)
+          if [ -n "$PIDS" ]; then
+            for p in $PIDS; do
+              if grep -q ".so" /proc/$p/maps 2>/dev/null; then
+                READY=1
+              fi
+            done
+            [ "$READY" = "1" ] && break
+          fi
+          sleep 2
+        done
+        PIDS=$(pidof gnb | tr ' ' ',')
+        perf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-store,L1-dcache-load-misses -I 1000 --interval-count 180 -p $PIDS 2>&1| awk 'NR>1 { print $2,$3,$5 }' | tr ' ' ',' >> cache.log &
+        perf stat -e power/energy-pkg/ -I 1000 --interval-count 180 2>&1 | grep -vE 'time' | awk 'NR>1 { print $2 }' >> energy.csv &
+        vmstat 1 180 -S K | grep -vE 'free|io' | awk 'NR>2 { print $4 }' >> mem.csv &
+        pidstat -C gnb -w -u -r -h 1 180 | grep -v '^#' | awk 'NR>1 && !/^[[:space:]]*$/' >> cpu.log &
+        python3 profile.py 180 99 > onCPU.log &
+        python3 offcputime.py 180 > offCPU.log &
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "2Gi"       
+        ephemeral-storage: "2Gi"
+      limits:
+        memory: "2Gi"      
+        ephemeral-storage: "2Gi"
+    volumeMounts:
+    - name: libmodules
+      mountPath: /lib/modules
+      readOnly: true
+    - name: debugfs
+      mountPath: /sys/kernel/debug
+    - name: tracefs
+      mountPath: /sys/kernel/tracing
+  volumes:
+  - name: libmodules
+    hostPath:
+      path: /lib/modules
+  - name: debugfs
+    hostPath:
+      path: /sys/kernel/debug
+  - name: tracefs
+    hostPath:
+      path: /sys/kernel/tracing

@@ -1,0 +1,262 @@
+{{- $ru_list_yaml := $.Files.Get "rus.yaml" | fromYaml }}
+{{- $cpu_list_yaml := $.Files.Get "cpu.yaml" | fromYaml }}
+{{- $coresPer := (div $.Values.physicalCores $.Values.jobs) }}
+{{- if lt $coresPer 1 }}
+  {{- $coresPer = 1 }}
+{{- else }}
+  {{- $coresPer = floor $coresPer }}
+{{- end }}
+
+{{- range $i := until (int $.Values.jobs) }}
+{{- $radio := index $ru_list_yaml.ru_list $i }}
+
+{{- $start := mod (mul $i $coresPer) $.Values.physicalCores }}
+{{- $end := add (int $start) $coresPer }}
+{{- $range := list }}
+{{- range $i := untilStep (int $start) (int $end) 1 }}
+  {{- $core := (index $cpu_list_yaml.coreList (int $i)).core }}
+    {{- $range = append $range $core }}
+{{- end }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: srsran-gnb-config-{{ $i }}
+data:
+  gnb.conf: |
+    cu_up:
+      ngu:
+        socket:
+          - bind_addr: {{ $radio.bind_addr }}
+            ext_addr: {{ $radio.bind_addr }}
+      test_mode:
+        enable: false
+      test_mode_userplane:
+        enable: true
+        pdu_session_id: 1
+        drb_id: 1
+        five_qi: 1
+        qfi: 1
+        pcell_index: 0
+        f1u_ul_addr: 127.0.10.1
+        f1u_ul_teid: 256
+        f1u_dl_addr: 127.0.10.2
+        f1u_dl_teid: 257
+        n3_peer_addr: {{ $radio.bind_addr }}
+        n3_peer_teid: 512
+        n3_dl_teid: 1
+        dl_generator_enable: false
+        ul_generator_enable: true
+        mac_bsr_hook_enable: true
+        mac_bsr_hook_bind_addr: 127.0.0.1
+        mac_bsr_hook_bind_port: 39001
+        mac_bsr_default: 0
+        mac_bsr_stale_timeout_ms: 500
+
+    cu_cp:
+      amf:
+        addr: {{ $radio.addr }}
+        bind_addr: {{ $radio.bind_addr }}
+        sctp_nodelay: true
+        supported_tracking_areas:
+          - tac: 1
+            plmn_list:
+              - plmn: "99999"
+                tai_slice_support_list:
+                  - sst: 1
+
+    ru_ofh:
+      t1a_max_cp_dl: 470
+      t1a_min_cp_dl: 419
+      t1a_max_cp_ul: 430
+      t1a_min_cp_ul: 286
+      t1a_max_up: 390
+      t1a_min_up: 80
+      ta4_max: 500
+      ta4_min: 25
+      is_prach_cp_enabled: false
+      enable_lf_prach_slot_autoderivation: true
+      ignore_ecpri_payload_size: true
+      compr_method_ul: bfp
+      compr_bitwidth_ul: 9
+      compr_method_dl: bfp
+      compr_bitwidth_dl: 9
+      compr_method_prach: bfp
+      compr_bitwidth_prach: 9
+      enable_ul_static_compr_hdr: true
+      enable_dl_static_compr_hdr: true
+      iq_scaling: 12.8
+      cells:
+        - network_interface: {{ $radio.net_interface }}
+          ru_mac_addr: {{ $radio.ru_mac }}
+          du_mac_addr: {{ $radio.du_mac }}
+          vlan_tag_cp: {{ $radio.tag_cp }}
+          vlan_tag_up: {{ $radio.tag_up }}
+          prach_port_id: [4, 5, 6, 7]
+          dl_port_id: [0, 1, 2, 3]
+          ul_port_id: [0, 1, 2, 3]
+          pcap_enable: false    
+          pcap_filename: /tmp/ofh.pcap
+
+    expert_execution:
+      queues:
+        cu_up_dl_ue_executor_queue_size: 18192
+        cu_up_ul_ue_executor_queue_size: 18192
+        cu_up_ctrl_ue_executor_queue_size: 18192
+        cu_up_strand_batch_size: 1212
+        du_ue_data_executor_queue_size: 16192
+
+    {{- if eq $.Values.ru "real" }}
+    cell_cfg:
+      dl_arfcn: {{ $radio.dl_arfcn }}
+      band: {{ $radio.band }}
+      channel_bandwidth_MHz: {{ $.Values.mhz }}
+      common_scs: 30
+      plmn: "99999"
+      tac: 1
+      pci: 25
+      pcg_p_nr_fr1: +23
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      prach:
+        prach_config_index: 7
+        prach_root_sequence_index: 1
+        zero_correlation_zone: 0
+        prach_frequency_start: 0
+        preamble_trans_max: 50
+        power_ramping_step_db: 4
+      tdd_ul_dl_cfg:
+        dl_ul_tx_period: 10
+        nof_dl_slots: 7
+        nof_dl_symbols: 6
+        nof_ul_slots: 2
+        nof_ul_symbols: 4
+      ssb:
+        pss_to_sss_epre_db: 0
+        ssb_block_power_dbm: -16
+        ssb_period: 20 
+      ul_common:
+        p_max: 23 
+      pdsch:
+        dmrs_additional_position: 3
+        mcs_table: qam256
+        olla_target_bler: 0.20    
+        olla_cqi_inc_step: 0.01
+        olla_max_cqi_offset: 6
+        max_nof_harq_retxs: 3
+        max_rank: 4
+      pusch:
+        max_ue_mcs: 20
+      srs:
+        srs_period_ms: 640
+        srs_max_nof_sym_per_slot: 6             # Optional UINT (2). Sets the number of symbols for UL slot that are reserved for the SRS cell resources. Supprted: [1 - 6].
+        srs_nof_sym_per_resource: 4             # Optional UINT (2). Sets the number of symbols per SRS resource. Supported: {1,2,4}.
+        srs_tx_comb: 2                          # Optional UINT (4). Sets the SRS TX comb size. Supported: {2, 4}.
+        srs_cyclic_shift_reuse: 1               # Optional UINT (1). Sets the SRS cyclic shift reuse factor. It needs to be compatible with the TX comb and number of UL antenna ports. Supported: {1,2,3,4,6}.
+        srs_sequence_id_reuse: 1
+      csi:
+        csi_rs_enabled: true                    # Optional BOOLEAN (true). Enables CSI-RS resources and CSI reporting. Supported: [false, true].
+        csi_rs_period: 40 
+    {{- else }}
+    cell_cfg:
+      dl_arfcn: 381500
+      band: 39
+      channel_bandwidth_MHz: 100
+      common_scs: 30
+      pci: 1
+      nof_antennas_dl: 4
+      nof_antennas_ul: 4
+      pdsch:
+        max_ue_mcs: {{ $.Values.max_mcs }}
+        mcs_table: qam256
+      pusch:
+        max_ue_mcs: {{ $.Values.max_mcs }}
+        mcs_table: qam256
+        rv_sequence: 0
+
+    ru_dummy:
+      time_scaling: 10
+    {{- end }}
+
+    test_mode:
+      test_ue:
+        rnti: 1
+        pdsch_active: false
+        pusch_active: true
+        ri: {{ $.Values.rank }}
+        cqi: {{ $.Values.cqi }}
+        nof_ues: 1
+
+    test_mode_userplane:
+      enable: true
+      pdu_session_id: 1
+      drb_id: 1
+      five_qi: 1          # UM (required)
+      qfi: 1
+      pcell_index: 0
+      f1u_ul_addr: 127.0.10.1
+      f1u_ul_teid: 256
+      f1u_dl_addr: 127.0.10.2
+      f1u_dl_teid: 257
+      n3_peer_addr: {{ $radio.bind_addr }}
+      n3_peer_teid: 512
+      n3_dl_teid: 1
+      dl_generator_enable: false
+      ul_generator_enable: true
+      mac_bsr_hook_enable: true
+      mac_bsr_hook_bind_addr: 127.0.0.1
+      mac_bsr_hook_bind_port: 39001
+      mac_bsr_default: 0
+      mac_bsr_stale_timeout_ms: 500
+      ul_sdu_size: 1000
+
+    hal:
+      {{- $vf := "" }}
+      {{- if eq $.Values.mode "hardware" }}
+      bbdev_hwacc:
+        hwacc_type: acc100
+        id: 0
+        pdsch_enc:
+          nof_hwacc: 8
+          cb_mode: false
+          dedicated_queue: false
+        pusch_dec:
+          nof_hwacc: 4
+          force_local_harq: false
+          dedicated_queue: false
+          harq_context_size: 4096
+      {{- if gt $i 7 }}
+      {{- $vf = printf "-a %s.%d" $.Values.vf1 (mod $i 8)}}
+      {{- else }}
+      {{- $vf = printf "-a %s.%d" $.Values.vf0 $i }}
+      {{- end }}
+      eal_args: "{{ $vf }} --lcores=(0-3)@({{ join "," $range }}) -a {{ $radio.net_interface }}"
+      {{- else }}
+      eal_args: "--file-prefix gnb --lcores=(0-3)@(4-23) -a {{ $radio.net_interface }}"
+      {{- end }}
+  
+    log:
+      filename: /tmp/gnb.log
+      phy_level: info
+      hal_level: warning
+      all_level: error
+      fapi_level: info
+  
+    metrics:
+      enable_log: true
+      enable_verbose: true
+      layers:
+        enable_sched: true
+        enable_du_low: true
+        enable_rlc: true
+        enable_pdcp: true
+        enable_rrc: true
+        enable_mac: true 
+    expert_execution:
+      threads:
+         upper_phy:
+          max_pdsch_concurrency: 0
+          max_pusch_and_srs_concurrency: 0
+--- 
+{{ end }}
+

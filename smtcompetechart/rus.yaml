@@ -1,0 +1,73 @@
+ru_list:
+- addr : 172.30.129.35 #INF2
+  bind_addr: 10.0.0.20 
+  net_interface: 0000:86:01.2
+  ru_mac: 70:b3:d5:e1:5f:b9
+  du_mac: 00:11:22:33:66:88
+  tag_cp: 7
+  tag_up: 7
+  dl_arfcn: 660000
+  band: 77
+- addr : 172.30.129.35 #CM2
+  bind_addr: 10.0.0.21
+  net_interface: 0000:86:09.1
+  ru_mac: 70:b3:d5:e1:5f:da
+  du_mac: 00:11:22:33:99:88
+  tag_cp: 15
+  tag_up: 15
+  dl_arfcn: 660000
+  band: 77
+- addr : 172.30.129.35 #DSB1
+  bind_addr: 10.0.0.22
+  net_interface: 0000:86:11.1
+  ru_mac: 70:b3:d5:e1:5f:ad
+  du_mac: 00:11:22:33:dd:88
+  tag_cp: 25
+  tag_up: 25
+  dl_arfcn: 660000
+  band: 77
+- addr : 172.30.129.35 #DSB3
+  bind_addr: 10.0.0.23
+  net_interface: 0000:86:19.1
+  ru_mac: 70:b3:d5:e1:5f:d4
+  du_mac: 00:11:22:33:bb:88
+  tag_cp: 26
+  tag_up: 26
+  dl_arfcn: 660000
+  band: 77
+- addr: 172.30.129.35 #MLB3
+  bind_addr: 10.0.0.24
+  net_interface: 0000:86:01.3
+  ru_mac: 98:ae:71:04:90:dd
+  du_mac: 00:11:22:33:44:99
+  tag_cp: 12
+  tag_up: 12
+  dl_arfcn: 660000
+  band: 77
+- addr: 172.30.129.35 #MLB6
+  bind_addr: 10.0.0.25
+  net_interface: 0000:86:09.2
+  ru_mac: 70:b3:d5:e1:5f:fb
+  du_mac: 00:11:22:33:ee:88
+  tag_cp: 19
+  tag_up: 19
+  dl_arfcn: 660000
+  band: 77
+- addr: 172.30.129.35 #MLB2
+  bind_addr: 10.0.0.26
+  net_interface: 0000:86:11.2
+  ru_mac: 98:ae:71:04:90:e3
+  du_mac: 00:11:22:33:33:99
+  tag_cp: 8
+  tag_up: 8
+  dl_arfcn: 660000
+  band: 77
+- addr: 172.30.129.35 #AT4 Currently not Configured
+  bind_addr: 10.0.0.27
+  net_interface: 0000:86:19.2
+  ru_mac: 98:ae:71:04:90:d9
+  du_mac: 00:11:22:33:aa:99
+  tag_cp: 21
+  tag_up: 21
+  dl_arfcn: 660000
+  band: 77

@@ -1,0 +1,21 @@
+mode: hardware
+jobs: 1
+totalCores: 53
+physicalCores: 20
+rnti: 1
+rank: 4
+cqi: 15
+encQ: 4
+decQ: 4
+max_mcs: 27
+iter: 2
+coreDis: dis
+ru: real
+vf0: 0000:11:00
+vf1: 0000:11.01
+mhz: 100
+totalPages: 64
+freeMem: 96
+prbs: 275
+channel: dl
+
