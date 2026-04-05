@@ -1,0 +1,71 @@
+#Profiler Pod (Executes System Profiling)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: profiler
+spec:
+  hostPID: true
+  hostNetwork: true
+  nodeName: k8s-worker5
+  containers:
+  - name: profiler
+    image: fatimkone04/profiling:w5
+    imagePullPolicy: Always
+    env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib64
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        while true; do
+          PIDS=$(pidof gnb)
+          if [ -n "$PIDS" ]; then
+            for p in $PIDS; do
+              if grep -q ".so" /proc/$p/maps 2>/dev/null; then
+                READY=1
+              fi
+            done
+            [ "$READY" = "1" ] && break
+          fi
+          sleep 2
+        done
+        PIDS=$(pidof gnb | tr ' ' ',')
+        perf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-store,L1-dcache-load-misses -I 1000 --interval-count 180 -p $PIDS 2>&1| awk 'NR>1 { print $2,$3,$5 }' | tr ' ' ',' >> cache.log &
+        perf stat -e power/energy-pkg/ -I 1000 --interval-count 180 2>&1 | grep -vE 'time' | awk 'NR>1 { print $2 }' >> energy.csv &
+        vmstat 1 180 -S K | grep -vE 'free|io' | awk 'NR>2 { print $4 }' >> mem.csv &
+        pidstat -C gnb -w -u -r -h 1 180 | grep -v '^#' | awk 'NR>1 && !/^[[:space:]]*$/' >> cpu.log &
+        {{- if eq $.Values.mode "hardware" }}
+        python3 profile.py 180 99 --offload > onCPU.log &
+        {{- else }}
+        python3 profile.py 180 99 > onCPU.log &
+        {{- end }}
+        python3 offcputime.py 180 > offCPU.log &
+        sleep infinity
+    securityContext:
+      privileged: true
+    resources:
+      requests:
+        memory: "2Gi"       
+        ephemeral-storage: "2Gi"
+      limits:
+        memory: "2Gi"      
+        ephemeral-storage: "2Gi"
+    volumeMounts:
+    - name: libmodules
+      mountPath: /lib/modules
+      readOnly: true
+    - name: debugfs
+      mountPath: /sys/kernel/debug
+    - name: tracefs
+      mountPath: /sys/kernel/tracing
+  volumes:
+  - name: libmodules
+    hostPath:
+      path: /lib/modules
+  - name: debugfs
+    hostPath:
+      path: /sys/kernel/debug
+  - name: tracefs
+    hostPath:
+      path: /sys/kernel/tracing
